@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.viraj.javabrains.messenger.exception.DataNotFoundException;
+import com.viraj.javabrains.messenger.model.Link;
 import com.viraj.javabrains.messenger.model.Message;
 import com.viraj.javabrains.messenger.resources.bean.MessageFilterBean;
 import com.viraj.javabrains.messenger.service.MessageService;
@@ -65,13 +66,43 @@ public class MessageResource {
 	
 	@GET
 	@Path("/{messageId}")
-	public Message getMessage(@PathParam("messageId")Long id) {
+	public Message getMessage(@PathParam("messageId")Long id, @Context UriInfo uriInfo) {
 		Message message = messageService.getMessage(id);
 		if(message == null) {
 			throw new DataNotFoundException("Message with id " + id + " not found!" );
 		}
-		return messageService.getMessage(id);
+		message.addLink(getURIForSelf(uriInfo, message), "self");
+		message.addLink(getURIForProfile(uriInfo, message), "profile");
+		message.addLink(getURIForComments(uriInfo, message), "comments");
+		return message;
 	}
+
+	private String getURIForComments(UriInfo uriInfo, Message message) {
+		URI uri = uriInfo.getBaseUriBuilder()
+				 .path(MessageResource.class)
+				 .path(MessageResource.class,"getCommentsResource")
+				 .path(CommentsResource.class)
+				 .resolveTemplate("messageId", message.getId())
+				 .build();
+		return uri.toString();
+	}
+
+	private String getURIForProfile(UriInfo uriInfo, Message message) {
+		URI uri = uriInfo.getBaseUriBuilder()
+						 .path(ProfileResource.class)
+						 .path(message.getAuthor())
+						 .build();
+		return uri.toString();
+	}
+
+	private String getURIForSelf(UriInfo uriInfo, Message message) {
+		return uriInfo.getBaseUriBuilder()
+								.path(MessageResource.class)
+								.path(Long.toString(message.getId()))
+								.build()
+								.toString();
+	}
+
 	
 //	@POST
 //	public Message addMessage(Message message) {

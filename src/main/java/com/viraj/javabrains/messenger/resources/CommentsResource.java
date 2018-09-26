@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import com.viraj.javabrains.messenger.model.Comment;
 import com.viraj.javabrains.messenger.service.CommentService;
 
+@Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CommentsResource {

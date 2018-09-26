@@ -8,7 +8,6 @@ import javax.ws.rs.ext.Provider;
 
 import com.viraj.javabrains.messenger.model.ErrorMessage;
 
-@Provider
 public class GenericExceptionMapper implements ExceptionMapper<Throwable>{
 
 	@Override
