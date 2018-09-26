@@ -16,7 +16,7 @@ import com.viraj.javabrains.messenger.model.Comment;
 import com.viraj.javabrains.messenger.service.CommentService;
 
 @Path("/")
-@Produces(MediaType.APPLICATION_JSON)
+@Produces(value = {MediaType.APPLICATION_JSON, MediaType.TEXT_XML})
 @Consumes(MediaType.APPLICATION_JSON)
 public class CommentsResource {
 	
